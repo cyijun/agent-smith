@@ -2,31 +2,31 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> 递归自相似多智能体系统 —— 通过目录隔离协议实现无冲突的并行任务分解与执行
+> Recursive Self-Similar Multi-Agent System —— Conflict-free Parallel Task Decomposition and Execution through Directory Isolation Protocol
 
-**[English](README_EN.md)** | 简体中文
-
----
-
-## 简介
-
-**Agent Smith Matrix**（史密斯矩阵）是一个通用的多智能体协作框架，通过严格的目录隔离协议，让多个 AI Agent 能够并行工作，无冲突地协作完成复杂任务。
-
-核心设计理念：
-- **自相似性**：每个智能体（史密斯）都遵循相同的协议，可递归创建子智能体
-- **无冲突并行**：通过目录隔离确保多 Agent 同时工作时互不干扰
-- **任务分解**：自动将复杂任务拆分为可并行的子任务
-- **平台无关**：可在任何支持多智能体的系统或平台上运行
+**English** | [简体中文](README_CN.md)
 
 ---
 
-## 快速开始
+## Introduction
 
-### 安装
+**Agent Smith Matrix** is a general-purpose multi-agent collaboration framework that enables multiple AI agents to work in parallel without conflicts through a strict directory isolation protocol.
 
-**方式一：Claude Code Skill（推荐）**
+Core Design Principles:
+- **Self-Similarity**: Each agent (Smith) follows the same protocol and can recursively spawn child agents
+- **Conflict-Free Parallelism**: Directory isolation ensures multiple agents can work simultaneously without interference
+- **Task Decomposition**: Automatically breaks down complex tasks into parallelizable subtasks
+- **Platform Agnostic**: Can run on any system or platform that supports multi-agent execution
 
-将 `smith-matrix` 目录复制到 Claude Code 的 skills 目录：
+---
+
+## Quick Start
+
+### Installation
+
+**Option 1: Claude Code Skill (Recommended)**
+
+Copy the `smith-matrix` directory to Claude Code's skills directory:
 
 ```bash
 # macOS / Linux
@@ -36,203 +36,203 @@ cp -r smith-matrix ~/.claude/skills/
 Copy-Item -Recurse smith-matrix $env:USERPROFILE\.claude\skills\
 ```
 
-**方式二：独立使用**
+**Option 2: Standalone Usage**
 
-直接复制 `.smith-matrix/` 目录结构到你的项目：
+Copy the `.smith-matrix/` directory structure to your project:
 
 ```bash
 cp -r .smith-matrix-template ./my-project/.smith-matrix
 ```
 
-### 使用方法
+### Usage
 
-1. **初始化矩阵**
+1. **Initialize the Matrix**
 
-   在你的工作目录创建 `.smith-matrix/` 结构：
+   Create the `.smith-matrix/` structure in your working directory:
    ```bash
    mkdir -p .smith-matrix/{inbox,smiths,results}
    mkdir -p .smith-matrix/smiths/smith-root/{private,outbox,children}
    ```
 
-2. **定义任务**
+2. **Define the Task**
 
-   在 `inbox/` 目录创建任务文件：
+   Create a task file in the `inbox/` directory:
    ```markdown
    # task-001.md
-   ## 任务：AI Agent 市场研究
+   ## Task: AI Agent Market Research
 
-   ### 目标
-   全面了解 AI Agent 市场现状
+   ### Objective
+   Comprehensive understanding of AI Agent market landscape
 
-   ### 子任务
-   1. 市场趋势分析
-   2. 主要厂商调研
-   3. 技术发展追踪
-   4. 应用场景研究
+   ### Subtasks
+   1. Market trend analysis
+   2. Key vendor research
+   3. Technology development tracking
+   4. Application scenario research
    ```
 
-3. **启动执行**
+3. **Start Execution**
 
-   根智能体读取任务，决定直接执行或分解创建子智能体
+   The root agent reads the task and decides to execute directly or decompose and create child agents
 
 ---
 
-## 核心概念
+## Core Concepts
 
-### 史密斯 (Smith)
+### Smith (Agent)
 
-自相似的智能体单元，每个史密斯拥有：
-- 唯一 ID（如 `smith-root`、`smith-001`）
-- 层级标识（Level 0 为根，逐级递增）
-- 父史密斯引用（根史密斯无父）
+A self-similar agent unit. Each Smith has:
+- Unique ID (e.g., `smith-root`, `smith-001`)
+- Level indicator (Level 0 is root, increments downward)
+- Parent Smith reference (root has no parent)
 
-### 目录隔离协议
+### Directory Isolation Protocol
 
 ```
 .smith-matrix/
-├── inbox/                 # 任务队列（父写子读）
+├── inbox/                 # Task queue (parent writes, children read)
 ├── smiths/
-│   ├── smith-root/        # 根智能体
-│   │   ├── smith.md       # 智能体定义（提示词）
-│   │   ├── private/       # 私有工作区
-│   │   ├── outbox/        # 结果输出
-│   │   └── children/      # 子智能体目录
-│   └── smith-001/         # 子智能体
+│   ├── smith-root/        # Root agent
+│   │   ├── smith.md       # Agent definition (prompt)
+│   │   ├── private/       # Private workspace
+│   │   ├── outbox/        # Result output
+│   │   └── children/      # Child agent directory
+│   └── smith-001/         # Child agent
 │       ├── smith.md
 │       ├── private/
 │       ├── outbox/
 │       └── children/
 └── results/
-    └── final.md           # 最终结果
+    └── final.md           # Final result
 ```
 
-**访问控制规则**：
+**Access Control Rules**:
 
-| 目录 | 权限 | 说明 |
-|------|------|------|
-| `private/` | 只写自己 | 草稿、思考、临时文件 |
-| `outbox/` | 只写自己 | 最终结果输出 |
-| `children/` | 只写自己 | 创建子智能体（父权限） |
-| `inbox/` | 父写子读 | 任务分发队列 |
+| Directory | Permission | Description |
+|-----------|------------|-------------|
+| `private/` | Self-write only | Drafts, thoughts, temporary files |
+| `outbox/` | Self-write only | Final result output |
+| `children/` | Self-write only | Create child agents (parent privilege) |
+| `inbox/` | Parent write, child read | Task distribution queue |
 
-### 执行流程
+### Execution Flow
 
 ```
-读取 inbox/ 任务
+Read task from inbox/
     ↓
-分析任务复杂度
+Analyze task complexity
     ↓
 ┌─────────────┴─────────────┐
 ↓                           ↓
-可直接完成              需要分解
+Can complete directly   Needs decomposition
     ↓                           ↓
-执行任务              设计子任务
+Execute task          Design subtasks
     ↓                           ↓
-写入 outbox/          创建 inbox/ 子任务
+Write to outbox/      Create inbox/ subtasks
     ↓                           ↓
-结束                  创建子智能体
+End                   Create child agents
                               ↓
-                        等待子结果
+                        Wait for child results
                               ↓
-                        汇总结果
+                        Aggregate results
                               ↓
-                        写入 outbox/
+                        Write to outbox/
                               ↓
-                        结束
+                        End
 ```
 
 ---
 
-## 平台集成
+## Platform Integration
 
 ### Claude Code
 
-本仓库已包含完整的 Claude Code Skill 配置：
+This repository includes a complete Claude Code Skill configuration:
 
-- **Skill 入口**：`smith-matrix/SKILL.md`
-- **触发词**："创建多智能体系统"、"设置智能体矩阵"、"分解任务并行执行"
-- **自动初始化**：触发后自动创建 `.smith-matrix/` 目录结构
+- **Skill Entry**: `smith-matrix/SKILL.md`
+- **Trigger Phrases**: "create multi-agent system", "set up agent matrix", "decompose task for parallel execution"
+- **Auto-initialization**: Automatically creates `.smith-matrix/` directory structure when triggered
 
-### 其他平台
+### Other Platforms
 
-Smith Matrix 是一个开放协议，可以在以下平台实现：
+Smith Matrix is an open protocol that can be implemented on:
 
-- **AutoGen** - 使用 UserProxyAgent + AssistantAgent 组合
-- **LangGraph** - 作为状态机工作流实现
-- **CrewAI** - 作为 Crew + Agents 结构
-- **自定义系统** - 任何支持目录读写和多进程的环境
-
----
-
-## 示例场景
-
-### 市场研究
-
-将复杂的 AI Agent 市场研究分解为 4 个并行子任务：
-1. 市场趋势分析
-2. 主要厂商调研
-3. 技术发展追踪
-4. 应用场景研究
-
-→ [查看完整示例](./smith-matrix/examples/market-research.md)
-
-### 代码审查
-
-将大规模代码审查分解为模块级别并行处理：
-1. 数据层审查
-2. 业务逻辑层审查
-3. API 接口层审查
-4. 前端组件审查
-
-### 内容创作
-
-分布式协作完成内容项目：
-1. 大纲设计
-2. 章节撰写（多个作者并行）
-3. 编辑校对
-4. 格式统一
+- **AutoGen** - Using UserProxyAgent + AssistantAgent combination
+- **LangGraph** - As a state machine workflow
+- **CrewAI** - As Crew + Agents structure
+- **Custom Systems** - Any environment supporting directory I/O and multi-processing
 
 ---
 
-## 最佳实践
+## Example Scenarios
 
-### 任务分解原则
+### Market Research
 
-1. **粒度控制**：每个子任务应该在 1-4 小时内可完成
-2. **独立性优先**：子任务之间应尽量低耦合，减少依赖
-3. **明确接口**：每个任务都应有清晰的输入定义和输出格式
-4. **终局思维**：避免无限分解，设定最大层级（建议不超过 3 层）
+Decompose complex AI Agent market research into 4 parallel subtasks:
+1. Market trend analysis
+2. Key vendor research
+3. Technology development tracking
+4. Application scenario research
 
-### 结果汇总技巧
+→ [View Full Example](./smith-matrix/examples/market-research.md)
 
-1. **交叉验证**：检查子任务结果之间的一致性
-2. **矛盾处理**：发现矛盾时深入分析原因，给出合理解释
-3. **增量汇总**：子任务完成后立即部分汇总，避免最后堆积
-4. **可追溯性**：汇总结果中引用各子任务的输出路径
+### Code Review
+
+Break down large-scale code review into module-level parallel processing:
+1. Data layer review
+2. Business logic layer review
+3. API interface layer review
+4. Frontend component review
+
+### Content Creation
+
+Distributed collaboration for content projects:
+1. Outline design
+2. Section writing (multiple authors in parallel)
+3. Editing and proofreading
+4. Format standardization
 
 ---
 
-## 项目结构
+## Best Practices
+
+### Task Decomposition Principles
+
+1. **Granularity Control**: Each subtask should be completable in 1-4 hours
+2. **Independence First**: Subtasks should have low coupling and minimal dependencies
+3. **Clear Interfaces**: Each task should have well-defined input and output formats
+4. **Endgame Mindset**: Avoid infinite decomposition; set maximum levels (recommend no more than 3)
+
+### Result Aggregation Tips
+
+1. **Cross-Validation**: Check consistency between subtask results
+2. **Conflict Resolution**: When conflicts are found, analyze causes and provide reasonable explanations
+3. **Incremental Aggregation**: Partially aggregate results immediately after subtasks complete to avoid backlog
+4. **Traceability**: Reference output paths of each subtask in aggregated results
+
+---
+
+## Project Structure
 
 ```
 smith-matrix/
-├── SKILL.md              # Claude Code Skill 定义
-├── smith.md              # 史密斯核心提示词模板
-├── examples/             # 使用示例
+├── SKILL.md              # Claude Code Skill definition
+├── smith.md              # Smith core prompt template
+├── examples/             # Usage examples
 │   ├── market-research.md
 │   └── code-refactor.md
-├── references/           # 参考资料
-│   ├── concepts.md       # 核心概念详解
-│   ├── protocol.md       # 协议规范
-│   └── best-practices.md # 最佳实践
-└── templates/            # 文件模板
+├── references/           # Reference materials
+│   ├── concepts.md       # Core concept details
+│   ├── protocol.md       # Protocol specification
+│   └── best-practices.md # Best practices
+└── templates/            # File templates
 ```
 
 ---
 
-## 协议规范
+## Protocol Specification
 
-### 智能体定义文件 (smith.md)
+### Agent Definition File (smith.md)
 
 ```yaml
 ---
@@ -242,57 +242,57 @@ level: 1
 created_at: 2026-03-05
 ---
 
-# 史密斯 {SMITH_ID}
+# Smith {SMITH_ID}
 
-## 身份
+## Identity
 - ID: {SMITH_ID}
-- 父级: {PARENT_ID}
-- 层级: {LEVEL}
+- Parent: {PARENT_ID}
+- Level: {LEVEL}
 
-## 任务
-读取 inbox/task-{ID}.md 并执行
+## Task
+Read inbox/task-{ID}.md and execute
 
-## 约束
-- 只写入自己的 private/ 和 outbox/
-- 可创建 children/ 下的子智能体
-- 必须在完成时输出到 outbox/result.md
+## Constraints
+- Only write to your own private/ and outbox/
+- Can create child agents under children/
+- Must output to outbox/result.md upon completion
 ```
 
-### 结果输出格式 (outbox/result.md)
+### Result Output Format (outbox/result.md)
 
 ```markdown
-# 结果: {任务标题}
+# Result: {Task Title}
 
-## 摘要
-一句话总结执行结果。
+## Summary
+One-sentence summary of the execution result.
 
-## 详细结果
+## Detailed Results
 ...
 
-## 子任务引用（如有）
-- smith-xxx: 负责 ...
-- smith-yyy: 负责 ...
+## Subtask References (if any)
+- smith-xxx: Responsible for ...
+- smith-yyy: Responsible for ...
 
-## 完成状态
-- [x] 已完成
-- 完成时间: 2026-03-05 12:00:00
+## Completion Status
+- [x] Completed
+- Completion time: 2026-03-05 12:00:00
 ```
 
 ---
 
-## 贡献
+## Contributing
 
-欢迎提交 Issue 和 Pull Request。
+Issues and Pull Requests are welcome.
 
-### 扩展想法
+### Extension Ideas
 
-- [ ] 可视化监控面板
-- [ ] 结果版本控制
-- [ ] 任务优先级队列
-- [ ] 跨矩阵协作协议
+- [ ] Visual monitoring dashboard
+- [ ] Result version control
+- [ ] Task priority queue
+- [ ] Cross-matrix collaboration protocol
 
 ---
 
-## 许可证
+## License
 
 [MIT](LICENSE) © 2026 Chen Yijun
