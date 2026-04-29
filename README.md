@@ -1,4 +1,4 @@
-# Agent Smith Matrix
+# Agent Smith
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -10,7 +10,7 @@
 
 ## Introduction
 
-**Agent Smith Matrix** is a general-purpose multi-agent collaboration framework that enables multiple AI agents to work in parallel without conflicts through a strict directory isolation protocol.
+**Agent Smith** is a general-purpose multi-agent collaboration framework that enables multiple AI agents to work in parallel without conflicts through a strict directory isolation protocol.
 
 Core Design Principles:
 - **Self-Similarity**: Each agent (Smith) follows the same protocol and can recursively spawn child agents
@@ -26,14 +26,14 @@ Core Design Principles:
 
 **Option 1: Claude Code Skill (Recommended)**
 
-Copy the `smith-matrix` directory to Claude Code's skills directory:
+Copy the `agent-smith` directory to Claude Code's skills directory:
 
 ```bash
 # macOS / Linux
-cp -r smith-matrix ~/.claude/skills/
+cp -r agent-smith ~/.claude/skills/
 
 # Windows (PowerShell)
-Copy-Item -Recurse smith-matrix $env:USERPROFILE\.claude\skills\
+Copy-Item -Recurse agent-smith $env:USERPROFILE\.claude\skills\
 ```
 
 **Option 2: Standalone Usage**
@@ -50,13 +50,13 @@ cp -r .smith-matrix-template ./my-project/.smith-matrix
 
    Create the `.smith-matrix/` structure in your working directory:
    ```bash
-   mkdir -p .smith-matrix/{inbox,smiths,results}
-   mkdir -p .smith-matrix/smiths/smith-root/{private,outbox,children}
+   mkdir -p .smith-matrix/smiths/smith-root/{inbox,private,outbox,children}
+   mkdir -p .smith-matrix/results
    ```
 
 2. **Define the Task**
 
-   Create a task file in the `inbox/` directory:
+   Create a task file in the root agent's `inbox/` directory:
    ```markdown
    # task-001.md
    ## Task: AI Agent Market Research
@@ -90,15 +90,16 @@ A self-similar agent unit. Each Smith has:
 
 ```
 .smith-matrix/
-├── inbox/                 # Task queue (parent writes, children read)
 ├── smiths/
 │   ├── smith-root/        # Root agent
 │   │   ├── smith.md       # Agent definition (prompt)
+│   │   ├── inbox/         # Task queue (parent writes, self reads)
 │   │   ├── private/       # Private workspace
 │   │   ├── outbox/        # Result output
 │   │   └── children/      # Child agent directory
 │   └── smith-001/         # Child agent
 │       ├── smith.md
+│       ├── inbox/         # Parent writes, self reads
 │       ├── private/
 │       ├── outbox/
 │       └── children/
@@ -110,10 +111,10 @@ A self-similar agent unit. Each Smith has:
 
 | Directory | Permission | Description |
 |-----------|------------|-------------|
+| `inbox/` | Parent write, self read | Task distribution queue |
 | `private/` | Self-write only | Drafts, thoughts, temporary files |
 | `outbox/` | Self-write only | Final result output |
 | `children/` | Self-write only | Create child agents (parent privilege) |
-| `inbox/` | Parent write, child read | Task distribution queue |
 
 ### Execution Flow
 
@@ -128,17 +129,17 @@ Can complete directly   Needs decomposition
     ↓                           ↓
 Execute task          Design subtasks
     ↓                           ↓
-Write to outbox/      Create inbox/ subtasks
-    ↓                           ↓
-End                   Create child agents
-                              ↓
-                        Wait for child results
-                              ↓
-                        Aggregate results
-                              ↓
-                        Write to outbox/
-                              ↓
-                        End
+Write to outbox/      Create child agents
+                            ↓
+                      Write tasks to child inbox/
+                            ↓
+                      Wait for child results
+                            ↓
+                      Aggregate results
+                            ↓
+                      Write to outbox/
+                            ↓
+                      End
 ```
 
 ---
@@ -149,13 +150,13 @@ End                   Create child agents
 
 This repository includes a complete Claude Code Skill configuration:
 
-- **Skill Entry**: `smith-matrix/SKILL.md`
+- **Skill Entry**: `agent-smith/SKILL.md`
 - **Trigger Phrases**: "create multi-agent system", "set up agent matrix", "decompose task for parallel execution"
 - **Auto-initialization**: Automatically creates `.smith-matrix/` directory structure when triggered
 
 ### Other Platforms
 
-Smith Matrix is an open protocol that can be implemented on:
+Agent Smith is an open protocol that can be implemented on:
 
 - **AutoGen** - Using UserProxyAgent + AssistantAgent combination
 - **LangGraph** - As a state machine workflow
@@ -174,7 +175,7 @@ Decompose complex AI Agent market research into 4 parallel subtasks:
 3. Technology development tracking
 4. Application scenario research
 
-→ [View Full Example](./smith-matrix/examples/market-research.md)
+→ [View Full Example](./agent-smith/examples/market-research.md)
 
 ### Code Review
 
@@ -215,7 +216,7 @@ Distributed collaboration for content projects:
 ## Project Structure
 
 ```
-smith-matrix/
+agent-smith/
 ├── SKILL.md              # Claude Code Skill definition
 ├── smith.md              # Smith core prompt template
 ├── examples/             # Usage examples

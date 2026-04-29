@@ -1,14 +1,17 @@
 ---
-name: Smith Matrix
-description: This skill should be used when the user asks to "create a multi-agent system", "spawn agents for parallel tasks", "decompose task recursively", "set up agent matrix", or wants to execute complex tasks using multiple coordinated agents with conflict-free parallel processing.
-version: 0.2.0
+name: agent-smith
+description: Use when the user asks to create a multi-agent system, spawn agents for parallel tasks, decompose tasks recursively, or set up an agent matrix
 ---
 
-# 史密斯矩阵 (Smith Matrix)
+# Agent Smith
 
-实现递归自相似多智能体系统的 Skill，通过目录隔离协议达成无冲突的并行任务分解与执行。
+实现递归自相似多智能体系统的 Skill。每个智能体（史密斯）拥有独立的工作空间，通过目录隔离协议达成无冲突的并行任务分解与执行。
 
-## 何时使用
+## Overview
+
+Agent Smith 是一个递归自相似的多智能体协作框架。每个智能体（史密斯）遵循相同的协议，在自己的工作空间内独立运行，通过父子间的 inbox/outbox 通信完成复杂任务的分解与汇总。
+
+## When to Use
 
 在以下场景触发本 Skill：
 
@@ -27,59 +30,46 @@ version: 0.2.0
 - 最大子代理数：每层最多 5 个
 - 终局规则：LEVEL ≥ 3 时禁止分解，必须直接执行
 
-**无冲突协议** 通过严格的目录隔离实现并行安全：每个史密斯只能写入自己的 `private/` 和 `outbox/`，只能读取父史密斯写入的 `inbox/`。父史密斯拥有创建子目录的专属权限。
-
-## 快速开始
-
-**第一步：初始化矩阵**
-
-执行初始化流程，创建 `.smith-matrix/` 工作目录和根史密斯。
-
-**第二步：定义根任务**
-
-在 `.smith-matrix/inbox/` 创建任务文件，描述需要完成的复杂任务。
-
-**第三步：启动执行**
-
-根史密斯读取任务，决定直接执行或分解为子任务并创建子史密斯。
+**无冲突协议** 通过严格的目录隔离实现并行安全：每个史密斯只能写入自己的 `private/` 和 `outbox/`，只能读取自己 `inbox/` 中父史密斯分配的任务。父史密斯拥有创建子目录和写入子史密斯 inbox 的专属权限。
 
 ## 目录结构
 
 ```
 .smith-matrix/
-├── inbox/                      # 任务队列（父写子读）
-│   └── task-{id}.md
 ├── smiths/
 │   ├── smith-root/             # 根史密斯
 │   │   ├── smith.md            # 史密斯定义（只读）
+│   │   ├── inbox/              # 任务队列（外部/父写入，自己读取）
 │   │   ├── private/            # 私有工作区
 │   │   ├── outbox/             # 结果输出
 │   │   │   └── result.md
 │   │   └── children/           # 子史密斯目录
 │   │       └── smith-001/
-│   └── smith-001/
-│       ├── smith.md
-│       ├── private/
-│       ├── outbox/
-│       └── children/
+│   │           ├── smith.md
+│   │           ├── inbox/      # 父写入，子读取
+│   │           ├── private/
+│   │           ├── outbox/
+│   │           └── children/
 └── results/
     └── final.md                # 最终结果
 ```
 
 ## 初始化矩阵
 
-当用户请求初始化 Smith Matrix 时，执行以下步骤：
+当用户请求初始化 Agent Smith 时，执行以下步骤：
 
-**1. 创建目录结构 `.smith-matrix/`**
+**1. 创建目录结构**
 
-创建基础目录框架：
-- `.smith-matrix/inbox/` —— 任务队列
-- `.smith-matrix/smiths/` —— 史密斯目录
+创建根史密斯环境：
+- `.smith-matrix/smiths/smith-root/inbox/` —— 任务队列
+- `.smith-matrix/smiths/smith-root/private/` —— 私有工作区
+- `.smith-matrix/smiths/smith-root/outbox/` —— 结果输出
+- `.smith-matrix/smiths/smith-root/children/` —— 子史密斯容器
 - `.smith-matrix/results/` —— 最终结果
 
 **2. 读取 `smith.md` 模板**
 
-从 `smith-matrix/smith.md` 读取史密斯定义模板。
+从 `agent-smith/smith.md` 读取史密斯定义模板。
 
 **3. 替换占位符**
 
@@ -94,7 +84,7 @@ version: 0.2.0
 
 **5. 创建任务文件**
 
-根据用户提供的任务描述，在 `.smith-matrix/inbox/` 创建任务文件。
+根据用户提供的任务描述，在 `.smith-matrix/smiths/smith-root/inbox/` 创建任务文件。
 
 **6. 生成启动指南**
 
@@ -114,7 +104,11 @@ version: 0.2.0
 
 **2. 创建子目录**
 
-创建 `.smith-matrix/smiths/{smith-id}/` 目录结构。
+在父史密斯的 `children/` 下创建 `{smith-id}/` 目录结构：
+- `inbox/` —— 父写入任务，子读取
+- `private/` —— 私有工作区
+- `outbox/` —— 结果输出
+- `children/` —— 子史密斯容器
 
 **3. 读取模板并替换**
 
@@ -127,16 +121,13 @@ version: 0.2.0
 
 将替换后的内容写入子目录的 `smith.md`。
 
-**5. 创建子目录结构**
+**5. 生成子任务文件**
 
-创建以下子目录：
-- `private/` —— 私有工作区
-- `outbox/` —— 结果输出
-- `children/` —— 子史密斯容器
+在子史密斯的 `inbox/` 下创建任务文件 `task-{子ID}.md`。
 
 **6. 生成子史密斯启动指南**
 
-在 `private/START_HERE.md` 生成启动指南，包含：
+在子史密斯的 `private/START_HERE.md` 生成启动指南，包含：
 - 子史密斯身份确认
 - 父史密斯引用
 - 任务文件位置
@@ -155,9 +146,9 @@ version: 0.2.0
     ↓                           ↓
 执行任务              设计子任务
     ↓                           ↓
-写入 outbox/          创建 inbox/ 子任务
+写入 outbox/          为每个子任务创建子史密斯目录
     ↓                           ↓
-结束                  创建子史密斯
+结束                  在子史密斯的 inbox/ 创建任务文件
                               ↓
                         等待子结果
                               ↓
@@ -173,12 +164,20 @@ version: 0.2.0
 **允许写入**：
 - 自己的 `private/` —— 草稿、思考、临时文件
 - 自己的 `outbox/result.md` —— 最终结果
-- 自己的 `children/` —— 创建子史密斯（父权限）
-- `inbox/` —— 创建子任务（父权限）
+- 自己的 `children/` —— 创建子史密斯目录（父权限）
+- 自己 `children/` 下子史密斯的 `inbox/` —— 创建子任务（父权限）
 
 **禁止写入**：
 - 其他史密斯的 `private/` 或 `outbox/`
-- 父史密斯的目录
+- 父史密斯的任何目录
+- 其他史密斯的 `inbox/`（只能写自己创建的子史密斯的 inbox）
+
+## 常见错误
+
+- **过度分解**：为分解而分解，子任务只需几分钟完成。应直接执行。
+- **层级过深**：超过 LEVEL 3 仍试图分解。终局规则必须遵守。
+- **写入全局 inbox**：在当前设计中不存在全局 inbox，只能在子史密斯的 inbox/ 中创建任务。
+- **子任务命名冲突**：同层子史密斯使用相同 ID。应使用递增序号确保唯一。
 
 ## 参考资料
 
@@ -196,5 +195,5 @@ version: 0.2.0
 将此目录复制到 Claude Code skills 目录：
 
 ```bash
-cp -r smith-matrix ~/.claude/skills/
+cp -r agent-smith ~/.claude/skills/
 ```

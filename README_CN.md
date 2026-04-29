@@ -1,4 +1,4 @@
-# Agent Smith Matrix
+# Agent Smith
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -10,7 +10,7 @@
 
 ## 简介
 
-**Agent Smith Matrix**（史密斯矩阵）是一个通用的多智能体协作框架，通过严格的目录隔离协议，让多个 AI Agent 能够并行工作，无冲突地协作完成复杂任务。
+**Agent Smith**（智能体史密斯）是一个通用的多智能体协作框架，通过严格的目录隔离协议，让多个 AI Agent 能够并行工作，无冲突地协作完成复杂任务。
 
 核心设计理念：
 - **自相似性**：每个智能体（史密斯）都遵循相同的协议，可递归创建子智能体
@@ -26,14 +26,14 @@
 
 **方式一：Claude Code Skill（推荐）**
 
-将 `smith-matrix` 目录复制到 Claude Code 的 skills 目录：
+将 `agent-smith` 目录复制到 Claude Code 的 skills 目录：
 
 ```bash
 # macOS / Linux
-cp -r smith-matrix ~/.claude/skills/
+cp -r agent-smith ~/.claude/skills/
 
 # Windows (PowerShell)
-Copy-Item -Recurse smith-matrix $env:USERPROFILE\.claude\skills\
+Copy-Item -Recurse agent-smith $env:USERPROFILE\.claude\skills\
 ```
 
 **方式二：独立使用**
@@ -50,13 +50,13 @@ cp -r .smith-matrix-template ./my-project/.smith-matrix
 
    在你的工作目录创建 `.smith-matrix/` 结构：
    ```bash
-   mkdir -p .smith-matrix/{inbox,smiths,results}
-   mkdir -p .smith-matrix/smiths/smith-root/{private,outbox,children}
+   mkdir -p .smith-matrix/smiths/smith-root/{inbox,private,outbox,children}
+   mkdir -p .smith-matrix/results
    ```
 
 2. **定义任务**
 
-   在 `inbox/` 目录创建任务文件：
+   在根智能体的 `inbox/` 目录创建任务文件：
    ```markdown
    # task-001.md
    ## 任务：AI Agent 市场研究
@@ -90,15 +90,16 @@ cp -r .smith-matrix-template ./my-project/.smith-matrix
 
 ```
 .smith-matrix/
-├── inbox/                 # 任务队列（父写子读）
 ├── smiths/
 │   ├── smith-root/        # 根智能体
 │   │   ├── smith.md       # 智能体定义（提示词）
+│   │   ├── inbox/         # 任务队列（父写子读）
 │   │   ├── private/       # 私有工作区
 │   │   ├── outbox/        # 结果输出
 │   │   └── children/      # 子智能体目录
 │   └── smith-001/         # 子智能体
 │       ├── smith.md
+│       ├── inbox/         # 父写子读
 │       ├── private/
 │       ├── outbox/
 │       └── children/
@@ -110,10 +111,10 @@ cp -r .smith-matrix-template ./my-project/.smith-matrix
 
 | 目录 | 权限 | 说明 |
 |------|------|------|
+| `inbox/` | 父写子读 | 任务分发队列 |
 | `private/` | 只写自己 | 草稿、思考、临时文件 |
 | `outbox/` | 只写自己 | 最终结果输出 |
 | `children/` | 只写自己 | 创建子智能体（父权限） |
-| `inbox/` | 父写子读 | 任务分发队列 |
 
 ### 执行流程
 
@@ -128,16 +129,16 @@ cp -r .smith-matrix-template ./my-project/.smith-matrix
     ↓                           ↓
 执行任务              设计子任务
     ↓                           ↓
-写入 outbox/          创建 inbox/ 子任务
-    ↓                           ↓
-结束                  创建子智能体
-                              ↓
+写入 outbox/          创建子智能体
+                            ↓
+                      在子智能体的 inbox/ 创建任务
+                            ↓
                         等待子结果
-                              ↓
+                            ↓
                         汇总结果
-                              ↓
+                            ↓
                         写入 outbox/
-                              ↓
+                            ↓
                         结束
 ```
 
@@ -149,13 +150,13 @@ cp -r .smith-matrix-template ./my-project/.smith-matrix
 
 本仓库已包含完整的 Claude Code Skill 配置：
 
-- **Skill 入口**：`smith-matrix/SKILL.md`
+- **Skill 入口**：`agent-smith/SKILL.md`
 - **触发词**："创建多智能体系统"、"设置智能体矩阵"、"分解任务并行执行"
 - **自动初始化**：触发后自动创建 `.smith-matrix/` 目录结构
 
 ### 其他平台
 
-Smith Matrix 是一个开放协议，可以在以下平台实现：
+Agent Smith 是一个开放协议，可以在以下平台实现：
 
 - **AutoGen** - 使用 UserProxyAgent + AssistantAgent 组合
 - **LangGraph** - 作为状态机工作流实现
@@ -174,7 +175,7 @@ Smith Matrix 是一个开放协议，可以在以下平台实现：
 3. 技术发展追踪
 4. 应用场景研究
 
-→ [查看完整示例](./smith-matrix/examples/market-research.md)
+→ [查看完整示例](./agent-smith/examples/market-research.md)
 
 ### 代码审查
 
@@ -215,7 +216,7 @@ Smith Matrix 是一个开放协议，可以在以下平台实现：
 ## 项目结构
 
 ```
-smith-matrix/
+agent-smith/
 ├── SKILL.md              # Claude Code Skill 定义
 ├── smith.md              # 史密斯核心提示词模板
 ├── examples/             # 使用示例
