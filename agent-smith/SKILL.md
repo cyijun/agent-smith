@@ -1,6 +1,6 @@
 ---
 name: agent-smith
-description: Use when the user asks to create a multi-agent system, spawn agents for parallel tasks, decompose tasks recursively, or set up an agent matrix
+description: Use when creating recursive self-similar agents for parallel task decomposition, delegating work to child agents, or setting up a multi-agent system
 ---
 
 # Agent Smith
