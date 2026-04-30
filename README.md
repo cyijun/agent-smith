@@ -38,20 +38,20 @@ Copy-Item -Recurse agent-smith $env:USERPROFILE\.claude\skills\
 
 **Option 2: Standalone Usage**
 
-Copy the `.smith-matrix/` directory structure to your project:
+Copy the `.agent-smith/` directory structure to your project:
 
 ```bash
-cp -r .smith-matrix-template ./my-project/.smith-matrix
+cp -r .agent-smith-template ./my-project/.agent-smith
 ```
 
 ### Usage
 
 1. **Initialize the Matrix**
 
-   Create the `.smith-matrix/` structure in your working directory:
+   Create the `.agent-smith/` structure in your working directory:
    ```bash
-   mkdir -p .smith-matrix/smiths/smith-root/{inbox,private,outbox,children}
-   mkdir -p .smith-matrix/results
+   mkdir -p .agent-smith/smiths/smith-root/{inbox,private,outbox,children}
+   mkdir -p .agent-smith/results
    ```
 
 2. **Define the Task**
@@ -89,7 +89,7 @@ A self-similar agent unit. Each Smith has:
 ### Directory Isolation Protocol
 
 ```
-.smith-matrix/
+.agent-smith/
 ├── smiths/
 │   ├── smith-root/        # Root agent
 │   │   ├── smith.md       # Agent definition (prompt)
@@ -152,7 +152,7 @@ This repository includes a complete Claude Code Skill configuration:
 
 - **Skill Entry**: `agent-smith/SKILL.md`
 - **Trigger Phrases**: "create multi-agent system", "set up agent matrix", "decompose task for parallel execution"
-- **Auto-initialization**: Automatically creates `.smith-matrix/` directory structure when triggered
+- **Auto-initialization**: Automatically creates `.agent-smith/` directory structure when triggered
 
 ### Other Platforms
 

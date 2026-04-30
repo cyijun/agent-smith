@@ -38,20 +38,20 @@ Copy-Item -Recurse agent-smith $env:USERPROFILE\.claude\skills\
 
 **方式二：独立使用**
 
-直接复制 `.smith-matrix/` 目录结构到你的项目：
+直接复制 `.agent-smith/` 目录结构到你的项目：
 
 ```bash
-cp -r .smith-matrix-template ./my-project/.smith-matrix
+cp -r .agent-smith-template ./my-project/.agent-smith
 ```
 
 ### 使用方法
 
 1. **初始化矩阵**
 
-   在你的工作目录创建 `.smith-matrix/` 结构：
+   在你的工作目录创建 `.agent-smith/` 结构：
    ```bash
-   mkdir -p .smith-matrix/smiths/smith-root/{inbox,private,outbox,children}
-   mkdir -p .smith-matrix/results
+   mkdir -p .agent-smith/smiths/smith-root/{inbox,private,outbox,children}
+   mkdir -p .agent-smith/results
    ```
 
 2. **定义任务**
@@ -89,7 +89,7 @@ cp -r .smith-matrix-template ./my-project/.smith-matrix
 ### 目录隔离协议
 
 ```
-.smith-matrix/
+.agent-smith/
 ├── smiths/
 │   ├── smith-root/        # 根智能体
 │   │   ├── smith.md       # 智能体定义（提示词）
@@ -152,7 +152,7 @@ cp -r .smith-matrix-template ./my-project/.smith-matrix
 
 - **Skill 入口**：`agent-smith/SKILL.md`
 - **触发词**："创建多智能体系统"、"设置智能体矩阵"、"分解任务并行执行"
-- **自动初始化**：触发后自动创建 `.smith-matrix/` 目录结构
+- **自动初始化**：触发后自动创建 `.agent-smith/` 目录结构
 
 ### 其他平台
 

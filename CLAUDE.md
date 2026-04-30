@@ -51,10 +51,10 @@ Then test by invoking one of the trigger phrases (e.g., "create multi-agent syst
 
 ### Directory Isolation Protocol
 
-The framework creates a `.smith-matrix/` directory tree at runtime. Each Smith has its own `inbox/`, `private/`, `outbox/`, and `children/`:
+The framework creates a `.agent-smith/` directory tree at runtime. Each Smith has its own `inbox/`, `private/`, `outbox/`, and `children/`:
 
 ```
-.smith-matrix/
+.agent-smith/
 ├── smiths/
 │   └── smith-root/        # Root agent
 │       ├── smith.md       # Agent definition (read-only after creation)

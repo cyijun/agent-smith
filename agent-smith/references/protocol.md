@@ -144,7 +144,7 @@ inbox/
 
 ```bash
 # 复制核心定义文件（从 skill 安装目录）
-cp ~/.claude/skills/agent-smith/smith.md .smith-matrix/smiths/smith-001/smith.md
+cp ~/.claude/skills/agent-smith/smith.md .agent-smith/smiths/smith-001/smith.md
 ```
 
 ### 4.3 只读的含义
