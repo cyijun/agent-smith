@@ -1,6 +1,6 @@
 ---
 name: agent-smith
-description: Use when creating recursive self-similar agents for parallel task decomposition, delegating work to child agents, or setting up a multi-agent system
+description: Use when a complex task needs parallel decomposition into independent subtasks, when multiple agents must work simultaneously without conflicts, or when recursive task delegation is required
 ---
 
 # Agent Smith
