@@ -63,7 +63,7 @@
 - [ ] 当前层级 < 3（若层级 ≥ 3，停止——直接执行）
 - [ ] 现有子代理数量 < 5（若已达 5 个，停止——直接执行或重新分解）
 
-约束门控是协议的最后防线，确保系统不会突破 [Hard Constraints](../../SKILL.md#hard-constraints-quick-reference)。违反门控创建的子结构视为无效。
+约束门控是协议的最后防线，确保系统不会突破 [Hard Constraints](../SKILL.md#hard-constraints-quick-reference)。违反门控创建的子结构视为无效。
 
 ### 2.4 子史密斯的限制
 
@@ -79,13 +79,13 @@
     ├── 创建 children/smith-001/
     │       ├── smith.md
     │       ├── inbox/
-    │       │   └── task-001.md    ← 父写入任务
+    │       │   └── task-smith-001.md    ← 父写入任务
     │       ├── private/
     │       ├── outbox/
     │       └── children/
     └── 子目录创建完成，任务就绪
             ↓
-        子史密斯读取 inbox/task-001.md
+        子史密斯读取 inbox/task-smith-001.md
             ↓
         子史密斯执行或继续分解
 ```

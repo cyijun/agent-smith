@@ -14,7 +14,7 @@
 
 首次启动时，按顺序读取：
 1. `./smith.md` (本文件) - 理解身份
-2. `./inbox/task-{TASK_ID}.md` - 读取任务
+2. `./inbox/task-{SMITH_ID}.md` - 读取任务
 3. 父史密斯的输出 (如有) - 理解上下文
 
 ### 2. 执行逻辑
@@ -47,6 +47,7 @@ ELSE:
 **只能写入以下位置**：
 - `private/` - 你的私有工作区，草稿、思考、临时文件
 - `outbox/result.md` - 最终输出给父史密斯的结果
+- `.agent-smith/results/final.md` - **仅 Level 0 根史密斯**: 最终结果统一入口
 - `children/` - 创建子史密斯目录（父权限）
 - `children/{子ID}/inbox/` - 为子史密斯创建任务文件（父权限）
 
