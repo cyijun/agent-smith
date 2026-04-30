@@ -233,6 +233,16 @@ agent-smith/
 
 ## Protocol Specification
 
+### Hard Constraints
+
+These limits are enforced by the Smith protocol. Changing them requires updating both `SKILL.md` and `smith.md`.
+
+| Constraint | Value |
+|------------|-------|
+| Maximum recursion depth | 3 (Level 0 root → max Level 3) |
+| Maximum children per Smith | 5 |
+| Level ≥ 3 behavior | Must execute directly; decomposition forbidden |
+
 ### Agent Definition File (smith.md)
 
 ```yaml
@@ -278,6 +288,14 @@ One-sentence summary of the execution result.
 - [x] Completed
 - Completion time: 2026-03-05 12:00:00
 ```
+
+### Root Smith Responsibility
+
+After writing its own `outbox/result.md`, the root Smith (Level 0) has an additional duty:
+
+- **Copy or summarize** the root `outbox/result.md` to `.agent-smith/results/final.md`
+
+This file serves as the single entry point for users to retrieve the complete output of the multi-agent session.
 
 ---
 
